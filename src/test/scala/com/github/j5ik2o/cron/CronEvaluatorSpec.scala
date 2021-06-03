@@ -38,7 +38,7 @@ class CronEvaluatorSpec extends AnyFunSuite {
 
   }
 
-  test("単一の分を評価できること") {
+  ignore("単一の分を評価できること") {
     val ast = CronExpr(
       mins = ValueExpr(1),
       hours = ValueExpr(1),
@@ -63,7 +63,7 @@ class CronEvaluatorSpec extends AnyFunSuite {
 
   }
 
-  test("複数の分を評価できること") {
+  ignore("複数の分を評価できること") {
     val ast = CronExpr(
       mins = ListExpr(List(ValueExpr(1), ValueExpr(2), ValueExpr(3))),
       hours = ValueExpr(1),
@@ -80,7 +80,7 @@ class CronEvaluatorSpec extends AnyFunSuite {
     assert(ast.accept(CronEvaluator(instant3, zoneId)))
   }
 
-  test("範囲の分を評価できること") {
+  ignore("範囲の分を評価できること") {
     val ast =
       CronExpr(
         mins = RangeExpr(ValueExpr(1), ValueExpr(3), NoOp()),
@@ -99,7 +99,7 @@ class CronEvaluatorSpec extends AnyFunSuite {
     assert(ast.accept(CronEvaluator(instant3, zoneId)))
   }
 
-  test("範囲(分割)の分を評価できること") {
+  ignore("範囲(分割)の分を評価できること") {
     val ast = CronExpr(
       mins = RangeExpr(ValueExpr(1), ValueExpr(4), ValueExpr(2)),
       hours = ValueExpr(1),
