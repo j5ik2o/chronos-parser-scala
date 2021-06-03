@@ -40,3 +40,7 @@ actuals.foreach(println)
 // 2021-06-03T22:41:16.093Z
 // 2021-06-03T22:42:16.093Z
 ```
+
+## License
+
+MIT license ([LICENSE-MIT](LICENSE-MIT) or https://opensource.org/licenses/MIT)
