@@ -11,7 +11,7 @@ class CronEvaluatorSpec extends AnyFunSuite {
 
   ignore("example") {
     val cronExpression = "*/1 * * * *"
-    val expr           = new CronParser().parse(cronExpression)
+    val expr           = CronParser.parse(cronExpression)
 
     val start = Instant.now().plus(Duration.ofSeconds(3))
     val crondInstants: LazyList[Instant] =
@@ -47,7 +47,7 @@ class CronEvaluatorSpec extends AnyFunSuite {
       dayOfWeeks = AnyValueExpr()
     )
     val instant1  = LocalDateTime.of(2011, 1, 1, 1, 1).toInstant(ZoneOffset.ofHours(9))
-    val evaluator = new CronEvaluator(instant1, zoneId)
+    val evaluator = CronEvaluator(instant1, zoneId)
     assert(ast.accept(evaluator))
 
     val ast2 = CronExpr(
@@ -58,7 +58,7 @@ class CronEvaluatorSpec extends AnyFunSuite {
       dayOfWeeks = AnyValueExpr()
     )
     val instant2   = LocalDateTime.of(2011, 1, 1, 1, 1).toInstant(ZoneOffset.ofHours(9))
-    val evaluator2 = new CronEvaluator(instant2, zoneId)
+    val evaluator2 = CronEvaluator(instant2, zoneId)
     assert(!ast2.accept(evaluator2))
 
   }
@@ -75,9 +75,9 @@ class CronEvaluatorSpec extends AnyFunSuite {
     val instant2 = LocalDateTime.of(2011, 1, 1, 1, 2).toInstant(ZoneOffset.ofHours(9))
     val instant3 = LocalDateTime.of(2011, 1, 1, 1, 3).toInstant(ZoneOffset.ofHours(9))
 
-    assert(ast.accept(new CronEvaluator(instant1, zoneId)))
-    assert(ast.accept(new CronEvaluator(instant2, zoneId)))
-    assert(ast.accept(new CronEvaluator(instant3, zoneId)))
+    assert(ast.accept(CronEvaluator(instant1, zoneId)))
+    assert(ast.accept(CronEvaluator(instant2, zoneId)))
+    assert(ast.accept(CronEvaluator(instant3, zoneId)))
   }
 
   test("範囲の分を評価できること") {
@@ -94,9 +94,9 @@ class CronEvaluatorSpec extends AnyFunSuite {
     val instant2 = LocalDateTime.of(2011, 1, 1, 1, 2).toInstant(ZoneOffset.ofHours(9))
     val instant3 = LocalDateTime.of(2011, 1, 1, 1, 3).toInstant(ZoneOffset.ofHours(9))
 
-    assert(ast.accept(new CronEvaluator(instant1, zoneId)))
-    assert(ast.accept(new CronEvaluator(instant2, zoneId)))
-    assert(ast.accept(new CronEvaluator(instant3, zoneId)))
+    assert(ast.accept(CronEvaluator(instant1, zoneId)))
+    assert(ast.accept(CronEvaluator(instant2, zoneId)))
+    assert(ast.accept(CronEvaluator(instant3, zoneId)))
   }
 
   test("範囲(分割)の分を評価できること") {
@@ -111,7 +111,7 @@ class CronEvaluatorSpec extends AnyFunSuite {
     val instant1 = LocalDateTime.of(2011, 1, 1, 1, 1).toInstant(ZoneOffset.ofHours(9))
     val instant2 = LocalDateTime.of(2011, 1, 1, 1, 3).toInstant(ZoneOffset.ofHours(9))
 
-    assert(ast.accept(new CronEvaluator(instant1, zoneId)))
-    assert(ast.accept(new CronEvaluator(instant2, zoneId)))
+    assert(ast.accept(CronEvaluator(instant1, zoneId)))
+    assert(ast.accept(CronEvaluator(instant2, zoneId)))
   }
 }

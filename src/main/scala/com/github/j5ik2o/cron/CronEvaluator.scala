@@ -23,6 +23,7 @@ object CronEvaluator {
   final val hourMax      = 23
   final val dayOfWeekMax = 7
 
+  def apply(instant: Instant, zoneId: ZoneId) = new CronEvaluator(instant, zoneId)
 }
 
 class CronEvaluator(instant: Instant, zoneId: ZoneId) extends ExprVisitor[Boolean] {

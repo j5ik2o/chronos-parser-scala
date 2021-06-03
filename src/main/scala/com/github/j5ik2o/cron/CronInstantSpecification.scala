@@ -9,7 +9,7 @@ object CronInstantSpecification {
   lazy val never: CronInstantSpecification = { _ => false }
 
   def of(expr: CronExpr, zoneId: ZoneId): CronInstantSpecification = { instant =>
-    new CronEvaluator(instant, zoneId).visit(expr)
+    CronEvaluator(instant, zoneId).visit(expr)
   }
 
 }

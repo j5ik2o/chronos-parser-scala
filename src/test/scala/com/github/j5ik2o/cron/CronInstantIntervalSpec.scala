@@ -14,12 +14,11 @@ class CronInstantIntervalSpec extends AnyFunSuite {
     LazyList
       .cons(value, createMinusInstantStream(value.minus(duration), duration, end)).takeWhile(_.compareTo(end) >= 0)
 
-  private val crondParser = new CronParser()
-  val zoneId              = ZoneId.systemDefault()
+  val zoneId = ZoneId.systemDefault()
 
   test("iterator") {
     val cronExpression = "*/2 * * * *"
-    val expr           = crondParser.parse(cronExpression)
+    val expr           = CronParser.parse(cronExpression)
     val start          = ZonedDateTime.of(2016, 1, 1, 0, 0, 0, 0, zoneId).toInstant
     val end            = start.plus(Duration.ofMinutes(20))
     val cii            = new CronInstantInterval(Limit(start), Limit(end), CronInstantSpecification.of(expr, zoneId))
@@ -30,7 +29,7 @@ class CronInstantIntervalSpec extends AnyFunSuite {
   }
   test("reverseIterator") {
     val cronExpression = "*/2 * * * *"
-    val expr           = crondParser.parse(cronExpression)
+    val expr           = CronParser.parse(cronExpression)
     val start          = ZonedDateTime.of(2016, 1, 1, 0, 0, 0, 0, zoneId).toInstant
     val end            = start.plus(Duration.ofMinutes(20))
     val cii            = new CronInstantInterval(Limit(start), Limit(end), CronInstantSpecification.of(expr, zoneId))
@@ -41,7 +40,7 @@ class CronInstantIntervalSpec extends AnyFunSuite {
   }
   test("getInstantAfter") {
     val cronExpression = "*/2 * * * *"
-    val expr           = crondParser.parse(cronExpression)
+    val expr           = CronParser.parse(cronExpression)
     val start          = ZonedDateTime.of(2016, 1, 1, 0, 0, 0, 0, zoneId).toInstant
     val end            = start.plus(Duration.ofMinutes(20))
     val cii            = new CronInstantInterval(Limit(start), Limit(end), CronInstantSpecification.of(expr, zoneId))

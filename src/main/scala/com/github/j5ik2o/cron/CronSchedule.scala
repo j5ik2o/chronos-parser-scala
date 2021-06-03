@@ -6,7 +6,7 @@ import com.github.j5ik2o.intervals.Limit
 import java.time.{ Instant, ZoneId }
 
 class CronSchedule(cronExpression: String, zoneId: ZoneId) {
-  val expr: CronExpr = new CronParser().parse(cronExpression)
+  val expr: CronExpr = CronParser.parse(cronExpression)
 
   def instantInterval(start: Instant): CronInstantInterval =
     CronInstantInterval.everFrom(Limit(start), CronInstantSpecification.of(expr, zoneId))
@@ -15,5 +15,11 @@ class CronSchedule(cronExpression: String, zoneId: ZoneId) {
     instantInterval(base).getInstantAfter(base, numberOfMinutes)
 
   def upcoming(start: Instant): LazyList[Instant] = instantInterval(start).toLazyList
+
+}
+
+object CronSchedule {
+
+  def apply(cronExpression: String, zoneId: ZoneId) = new CronSchedule(cronExpression, zoneId)
 
 }

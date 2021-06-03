@@ -4,7 +4,7 @@ import com.github.j5ik2o.cron.ast._
 import fastparse.NoWhitespace._
 import fastparse._
 
-class CronParser {
+object CronParser {
 
   def parse(source: String): CronExpr = fastparse.parse(source, instruction(_)) match {
     case Parsed.Success(result, _) => result
