@@ -70,7 +70,7 @@ val root = (project in file("."))
       "org.scalatest"     %% "scalatest"       % "3.2.9" % Test
     ),
     libraryDependencies ++= Seq(
-      "com.lihaoyi" %% "fastparse" % "2.2.4"
+      "com.lihaoyi" %% "fastparse" % "2.3.2"
     ).map(_.cross(CrossVersion.for3Use2_13))
   )
 
