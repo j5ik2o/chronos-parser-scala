@@ -1,4 +1,3 @@
-
 import Dependencies.Versions
 
 def crossScalacOptions(scalaVersion: String): Seq[String] =
@@ -30,15 +29,17 @@ lazy val baseSettings = Seq(
     )
   ),
   scalaVersion := Versions.scala213Version,
-  crossScalaVersions := Seq(Versions.scala212Version, Versions.scala213Version, Versions.scala3Version),
-  scalacOptions ++= (Seq(
-    "-unchecked",
-    "-feature",
-    "-deprecation",
-    "-encoding",
-    "UTF-8",
-    "-language:_"
-  ) ++ crossScalacOptions(scalaVersion.value)),
+  crossScalaVersions := Seq(Versions.scala212Version, Versions.scala213Version), //, Versions.scala3Version),
+  scalacOptions ++= (
+    Seq(
+      "-unchecked",
+      "-feature",
+      "-deprecation",
+      "-encoding",
+      "UTF-8",
+      "-language:_"
+    ) ++ crossScalacOptions(scalaVersion.value)
+  ),
   resolvers ++= Seq(
     Resolver.sonatypeRepo("snapshots"),
     Resolver.sonatypeRepo("releases"),
@@ -64,12 +65,14 @@ lazy val baseSettings = Seq(
 val root = (project in file("."))
   .settings(baseSettings)
   .settings(
-    name := "crond-paser",
+    name := "chronos-paser-scala",
     libraryDependencies ++= Seq(
-      "com.lihaoyi" %% "fastparse" % "2.2.2",
       "com.github.j5ik2o" %% "intervals-scala" % "1.0.0",
-      "org.scalatest" %% "scalatest" % "3.2.9" % Test
-    )
+      "org.scalatest"     %% "scalatest"       % "3.2.9" % Test
+    ),
+    libraryDependencies ++= Seq(
+      "com.lihaoyi" %% "fastparse" % "2.2.2"
+    ).map(_.cross(CrossVersion.for3Use2_13))
   )
 
 // --- Custom commands

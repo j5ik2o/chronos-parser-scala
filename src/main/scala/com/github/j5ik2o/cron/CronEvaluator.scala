@@ -1,10 +1,11 @@
-package com.github.j5ik2o.crond
+package com.github.j5ik2o.cron
 
-import com.github.j5ik2o.crond.CronEvaluator.Mapping
+import com.github.j5ik2o.cron.CronEvaluator._
+import com.github.j5ik2o.cron.ast._
 
 import java.time.temporal.TemporalAdjusters
 import java.time.{ Instant, LocalDateTime, ZoneId }
-import java.util.{ Calendar, TimeZone }
+import java.util.Calendar
 
 object CronEvaluator {
 
@@ -18,25 +19,25 @@ object CronEvaluator {
     java.time.DayOfWeek.SATURDAY  -> Calendar.SATURDAY
   )
 
+  final val minMax       = 59
+  final val hourMax      = 23
+  final val dayOfWeekMax = 7
+
 }
 
 class CronEvaluator(instant: Instant, zoneId: ZoneId) extends ExprVisitor[Boolean] {
 
+  private val ldt       = LocalDateTime.ofInstant(instant, zoneId)
+  private val dayMax    = ldt.`with`(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth
+  private val min       = ldt.getMinute
+  private val hour      = ldt.getHour
+  private val day       = ldt.getDayOfMonth
+  private val month     = ldt.getMonthValue
+  private val monthMax  = ldt.getMonth.maxLength()
+  private val dayOfWeek = Mapping(ldt.getDayOfWeek)
+
   override def visit(e: Expr): Boolean = e match {
     case CronExpr(mins, hours, days, months, dayOfWeeks) => {
-
-      val ldt       = LocalDateTime.ofInstant(instant, zoneId)
-      val min       = ldt.getMinute
-      val hour      = ldt.getHour
-      val day       = ldt.getDayOfMonth
-      val month     = ldt.getMonthValue
-      val monthMax  = ldt.getMonth.maxLength()
-      val dayOfWeek = Mapping(ldt.getDayOfWeek)
-
-      val minMax       = 59
-      val hourMax      = 23
-      val dayMax       = ldt.`with`(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth
-      val dayOfWeekMax = 7
 
       val m  = mins.accept(ExpressionEvaluator(min, minMax))
       val h  = hours.accept(ExpressionEvaluator(hour, hourMax))
@@ -53,10 +54,10 @@ class CronEvaluator(instant: Instant, zoneId: ZoneId) extends ExprVisitor[Boolea
 
     //println("now = %d, max = %d".format(now, max))
     def visit(e: Expr): Boolean = e match {
-      case AnyValueExpr()            => true
-      case LastValue() if now == max => true
-      case ValueExpr(n) if now == n  => true
-      case ListExpr(list)            => list.exists(_.accept(this))
+      case AnyValueExpr()                => true
+      case LastValueExpr() if now == max => true
+      case ValueExpr(n) if now == n      => true
+      case ListExpr(list)                => list.exists(_.accept(this))
       case RangeExpr(ValueExpr(start), ValueExpr(end), op) =>
         op match {
           case NoOp() if start <= now && now <= end => true

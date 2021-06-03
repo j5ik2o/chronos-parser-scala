@@ -1,11 +1,42 @@
-package com.github.j5ik2o.crond
+package com.github.j5ik2o.cron
 
+import com.github.j5ik2o.cron.ast._
+import com.github.j5ik2o.intervals.Limit
 import org.scalatest.funsuite.AnyFunSuite
 
-import java.time.{ LocalDateTime, ZoneId, ZoneOffset }
+import java.time.{ Duration, Instant, LocalDateTime, ZoneId, ZoneOffset }
 
 class CronEvaluatorSpec extends AnyFunSuite {
   val zoneId = ZoneId.systemDefault()
+
+  test("example") {
+    val cronExpression = "*/1 * * * *"
+    val expr           = new CronParser().parse(cronExpression)
+
+    val start = Instant.now().plus(Duration.ofSeconds(3))
+    val crondInstants: LazyList[Instant] =
+      CronInstantInterval.everFrom(Limit(start), CronInstantSpecification.of(expr, zoneId)).toLazyList.take(2)
+
+    def loop(crondInstants: LazyList[Instant]): Unit = {
+      crondInstants match {
+        case l if l.isEmpty => ()
+        case l @ h #:: t =>
+          val now = Instant.now()
+          println(s"h = $h, now = $now")
+          if (now.isAfter(h)) {
+            println("trigger!!!")
+            Thread.sleep(5000)
+            loop(t)
+          } else {
+            Thread.sleep(5000)
+            loop(l)
+          }
+      }
+    }
+
+    loop(crondInstants)
+
+  }
 
   test("単一の分を評価できること") {
     val ast = CronExpr(
