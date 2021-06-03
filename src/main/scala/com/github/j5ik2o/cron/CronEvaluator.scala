@@ -6,10 +6,11 @@ import com.github.j5ik2o.cron.ast._
 import java.time.temporal.TemporalAdjusters
 import java.time.{ Instant, LocalDateTime, ZoneId }
 import java.util.Calendar
+import java.time.DayOfWeek
 
 object CronEvaluator {
 
-  val Mapping = Map(
+  val Mapping: Map[DayOfWeek,Int] = Map(
     java.time.DayOfWeek.SUNDAY    -> Calendar.SUNDAY,
     java.time.DayOfWeek.MONDAY    -> Calendar.MONDAY,
     java.time.DayOfWeek.TUESDAY   -> Calendar.TUESDAY,

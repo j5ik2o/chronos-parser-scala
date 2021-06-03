@@ -14,7 +14,7 @@ class CronInstantIntervalSpec extends AnyFunSuite {
     LazyList
       .cons(value, createMinusInstantStream(value.minus(duration), duration, end)).takeWhile(_.compareTo(end) >= 0)
 
-  val zoneId = ZoneId.systemDefault()
+  val zoneId: ZoneId = ZoneId.systemDefault()
 
   test("iterator") {
     val cronExpression = "*/2 * * * *"

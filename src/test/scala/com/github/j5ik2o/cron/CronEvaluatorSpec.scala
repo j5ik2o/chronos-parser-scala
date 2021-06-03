@@ -7,7 +7,7 @@ import org.scalatest.funsuite.AnyFunSuite
 import java.time.{ Duration, Instant, LocalDateTime, ZoneId, ZoneOffset }
 
 class CronEvaluatorSpec extends AnyFunSuite {
-  val zoneId = ZoneId.systemDefault()
+  val zoneId: ZoneId = ZoneId.systemDefault()
 
   ignore("example") {
     val cronExpression = "*/1 * * * *"
