@@ -9,7 +9,7 @@ import java.time.{ Duration, Instant, LocalDateTime, ZoneId, ZoneOffset }
 class CronEvaluatorSpec extends AnyFunSuite {
   val zoneId = ZoneId.systemDefault()
 
-  test("example") {
+  ignore("example") {
     val cronExpression = "*/1 * * * *"
     val expr           = new CronParser().parse(cronExpression)
 
