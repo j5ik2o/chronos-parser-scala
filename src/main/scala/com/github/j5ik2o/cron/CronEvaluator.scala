@@ -10,7 +10,7 @@ import java.time.DayOfWeek
 
 object CronEvaluator {
 
-  val Mapping: Map[DayOfWeek,Int] = Map(
+  val Mapping: Map[DayOfWeek, Int] = Map(
     java.time.DayOfWeek.SUNDAY    -> Calendar.SUNDAY,
     java.time.DayOfWeek.MONDAY    -> Calendar.MONDAY,
     java.time.DayOfWeek.TUESDAY   -> Calendar.TUESDAY,
