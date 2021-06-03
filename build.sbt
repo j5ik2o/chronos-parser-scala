@@ -64,7 +64,7 @@ lazy val baseSettings = Seq(
 val root = (project in file("."))
   .settings(baseSettings)
   .settings(
-    name := "chronos-paser-scala",
+    name := "chronos-parser-scala",
     libraryDependencies ++= Seq(
       "com.github.j5ik2o" %% "intervals-scala" % "1.0.0",
       "org.scalatest"     %% "scalatest"       % "3.2.9" % Test
