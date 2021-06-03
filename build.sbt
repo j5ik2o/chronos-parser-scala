@@ -29,7 +29,6 @@ lazy val baseSettings = Seq(
     )
   ),
   scalaVersion := Versions.scala213Version,
-  crossScalaVersions := Seq(Versions.scala212Version, Versions.scala213Version), //, Versions.scala3Version),
   scalacOptions ++= (
     Seq(
       "-unchecked",
