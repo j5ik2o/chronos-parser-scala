@@ -9,7 +9,7 @@ class CronScheduleSpec extends AnyFunSuite {
   test("upcoming") {
     val cronExpression = "*/1 * * * *"
     val cronSchedule   = new CronSchedule(cronExpression, ZoneId.systemDefault())
-    val start          = Instant.now().plus(Duration.ofSeconds(3))
+    val start          = Instant.now()
     val actuals        = cronSchedule.upcoming(start).take(2).toList
     assert(actuals(0) == start)
     assert(actuals(1) == start.plus(Duration.ofMinutes(1)))
