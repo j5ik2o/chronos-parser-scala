@@ -27,6 +27,7 @@ val cronSchedule   = CronSchedule("*/1 * * * *", ZoneId.systemDefault())
 val actuals        = cronSchedule.upcoming(Instant.now()).take(10)
 assert(actuals(0) == start)
 assert(actuals(1) == start.plus(Duration.ofMinutes(1)))
+// ...
 actuals.foreach(println)
 
 // 2021-06-03T22:33:16.093Z
