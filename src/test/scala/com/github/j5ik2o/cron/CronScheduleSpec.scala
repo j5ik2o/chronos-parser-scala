@@ -2,18 +2,25 @@ package com.github.j5ik2o.cron
 
 import org.scalatest.funsuite.AnyFunSuite
 
-import java.time.{ Duration, Instant, ZoneId }
+import java.time.{ Duration, ZoneId, ZonedDateTime }
 
 class CronScheduleSpec extends AnyFunSuite {
 
   test("upcoming") {
-    val cronExpression = "*/1 * * * *"
+    val cronExpression = "*/3 * * * *"
     val cronSchedule   = CronSchedule(cronExpression, ZoneId.systemDefault())
-    val start          = Instant.now()
-    val actuals        = cronSchedule.upcoming(start).take(10)
-    assert(actuals(0) == start)
-    assert(actuals(1) == start.plus(Duration.ofMinutes(1)))
-    actuals.foreach(println)
+    val zoneId         = ZoneId.systemDefault()
+    val now            = ZonedDateTime.of(2021, 1, 1, 1, 3, 0, 0, zoneId)
+    println(s"n = $now")
+    val startInstant = now.toInstant
+    val upcomingList = cronSchedule.upcoming(startInstant).take(5)
+    upcomingList.zipWithIndex.foreach { case (instant, index) =>
+      assert(instant == startInstant.plus(Duration.ofMinutes(3 * index)))
+    }
+    upcomingList.zipWithIndex.foreach { case (i, index) =>
+      val zdt = ZonedDateTime.ofInstant(i, zoneId)
+      println(s"$index = $zdt")
+    }
   }
 
 }
