@@ -18,8 +18,8 @@ def crossScalacOptions(scalaVersion: String): Seq[String] =
 
 lazy val baseSettings = Seq(
   organization := "com.github.j5ik2o",
-  homepage := Some(url("https://github.com/j5ik2o/akka-persistence-dynamodb")),
-  licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+  homepage := Some(url("https://github.com/j5ik2o/chronos-parser-scala")),
+  licenses := List("The MIT License" -> url("http://opensource.org/licenses/MIT")),
   developers := List(
     Developer(
       id = "j5ik2o",
