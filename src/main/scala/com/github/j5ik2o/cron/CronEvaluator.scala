@@ -10,7 +10,7 @@ import java.time.DayOfWeek
 
 object CronEvaluator {
 
-  val Mapping: Map[DayOfWeek, Int] = Map(
+  final val Mapping: Map[DayOfWeek, Int] = Map(
     java.time.DayOfWeek.SUNDAY    -> Calendar.SUNDAY,
     java.time.DayOfWeek.MONDAY    -> Calendar.MONDAY,
     java.time.DayOfWeek.TUESDAY   -> Calendar.TUESDAY,
@@ -20,9 +20,9 @@ object CronEvaluator {
     java.time.DayOfWeek.SATURDAY  -> Calendar.SATURDAY
   )
 
-  final val minMax       = 59
-  final val hourMax      = 23
-  final val dayOfWeekMax = 7
+  final val MinMax       = 59
+  final val HourMax      = 23
+  final val DayOfWeekMax = 7
 
   def apply(instant: Instant, zoneId: ZoneId) = new CronEvaluator(instant, zoneId)
 }
@@ -41,11 +41,11 @@ class CronEvaluator(instant: Instant, zoneId: ZoneId) extends ExprVisitor[Boolea
   override def visit(e: Expr): Boolean = e match {
     case CronExpr(mins, hours, days, months, dayOfWeeks) => {
 
-      val m  = mins.accept(ExpressionEvaluator(min, minMax))
-      val h  = hours.accept(ExpressionEvaluator(hour, hourMax))
+      val m  = mins.accept(ExpressionEvaluator(min, MinMax))
+      val h  = hours.accept(ExpressionEvaluator(hour, HourMax))
       val d  = days.accept(ExpressionEvaluator(day, dayMax))
       val M  = months.accept(ExpressionEvaluator(month, monthMax))
-      val dw = dayOfWeeks.accept(ExpressionEvaluator(dayOfWeek, dayOfWeekMax))
+      val dw = dayOfWeeks.accept(ExpressionEvaluator(dayOfWeek, DayOfWeekMax))
 
       m && h && d && M && dw
     }
