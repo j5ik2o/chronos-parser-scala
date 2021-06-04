@@ -44,4 +44,4 @@ actuals.foreach(println)
 
 ## License
 
-MIT license ([LICENSE-MIT](LICENSE-MIT) or https://opensource.org/licenses/MIT)
+MIT license ([LICENSE](LICENSE) or https://opensource.org/licenses/MIT)
