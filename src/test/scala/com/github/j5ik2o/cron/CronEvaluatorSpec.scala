@@ -15,7 +15,8 @@ class CronEvaluatorSpec extends AnyFunSuite {
 
     val start = Instant.now().plus(Duration.ofSeconds(3))
     val crondInstants: LazyList[Instant] =
-      CronInstantInterval.everFrom(Limit(start), CronInstantSpecification.of(expr, zoneId)).toLazyList.take(2)
+      CronInstantInterval
+        .everFrom(Limit(start), CronInstantSpecification.of(expr, zoneId)).toLazyList.take(2)
 
     def loop(crondInstants: LazyList[Instant]): Unit = {
       crondInstants match {

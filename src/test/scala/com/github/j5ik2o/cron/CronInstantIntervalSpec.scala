@@ -21,9 +21,14 @@ class CronInstantIntervalSpec extends AnyFunSuite {
     val expr           = CronParser.parse(cronExpression)
     val start          = ZonedDateTime.of(2016, 1, 1, 0, 0, 0, 0, zoneId).toInstant
     val end            = start.plus(Duration.ofMinutes(20))
-    val cii            = new CronInstantInterval(Limit(start), Limit(end), CronInstantSpecification.of(expr, zoneId))
-    val list           = cii.iterator.toList
-    val expected       = createPlusInstantStream(start, Duration.ofMinutes(2), end).toList
+    val cii =
+      CronInstantInterval.inclusive(
+        Limit(start),
+        Limit(end),
+        CronInstantSpecification.of(expr, zoneId)
+      )
+    val list     = cii.iterator.toList
+    val expected = createPlusInstantStream(start, Duration.ofMinutes(2), end).toList
     assert(list == expected)
     list.take(10).foreach(println)
   }
@@ -32,9 +37,13 @@ class CronInstantIntervalSpec extends AnyFunSuite {
     val expr           = CronParser.parse(cronExpression)
     val start          = ZonedDateTime.of(2016, 1, 1, 0, 0, 0, 0, zoneId).toInstant
     val end            = start.plus(Duration.ofMinutes(20))
-    val cii            = new CronInstantInterval(Limit(start), Limit(end), CronInstantSpecification.of(expr, zoneId))
-    val list           = cii.reverseIterator.toList
-    val expected       = createMinusInstantStream(end, Duration.ofMinutes(2), start).toList
+    val cii = CronInstantInterval.inclusive(
+      Limit(start),
+      Limit(end),
+      CronInstantSpecification.of(expr, zoneId)
+    )
+    val list     = cii.reverseIterator.toList
+    val expected = createMinusInstantStream(end, Duration.ofMinutes(2), start).toList
     assert(list == expected)
     list.take(10).foreach(println)
   }
@@ -43,7 +52,11 @@ class CronInstantIntervalSpec extends AnyFunSuite {
     val expr           = CronParser.parse(cronExpression)
     val start          = ZonedDateTime.of(2016, 1, 1, 0, 0, 0, 0, zoneId).toInstant
     val end            = start.plus(Duration.ofMinutes(20))
-    val cii            = new CronInstantInterval(Limit(start), Limit(end), CronInstantSpecification.of(expr, zoneId))
+    val cii = CronInstantInterval.inclusive(
+      Limit(start),
+      Limit(end),
+      CronInstantSpecification.of(expr, zoneId)
+    )
     val result = for { min <- 0 to 20 by 2 } yield {
       val now     = ZonedDateTime.of(2016, 1, 1, 0, min, 0, 0, zoneId).toInstant
       val instant = cii.getInstantAfter(now, 1).get
