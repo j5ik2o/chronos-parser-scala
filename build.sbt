@@ -29,6 +29,7 @@ lazy val baseSettings = Seq(
     )
   ),
   scalaVersion := Versions.scala213Version,
+  // crossScalaVersions := Seq(Versions.scala213Version, Versions.scala3Version),
   scalacOptions ++= (
     Seq(
       "-unchecked",
@@ -42,12 +43,8 @@ lazy val baseSettings = Seq(
   resolvers ++= Seq(
     Resolver.sonatypeRepo("snapshots"),
     Resolver.sonatypeRepo("releases"),
-    "Seasar Repository" at "https://maven.seasar.org/maven2/",
-    "DynamoDB Local Repository" at "https://s3-us-west-2.amazonaws.com/dynamodb-local/release"
+    "Seasar Repository" at "https://maven.seasar.org/maven2/"
   ),
-  ThisBuild / scalafixScalaBinaryVersion := CrossVersion.binaryScalaVersion(scalaVersion.value),
-  semanticdbEnabled := true,
-  semanticdbVersion := scalafixSemanticdb.revision,
   Test / publishArtifact := false,
   Test / fork := true,
   Test / parallelExecution := false,
@@ -58,7 +55,14 @@ lazy val baseSettings = Seq(
     } else {
       old
     }
-  }
+  },
+  semanticdbEnabled := true,
+  semanticdbVersion := scalafixSemanticdb.revision,
+  // Remove me when scalafix is stable and feature-complete on Scala 3
+  ThisBuild / scalafixScalaBinaryVersion := (CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((2, _)) => CrossVersion.binaryScalaVersion(scalaVersion.value)
+    case _            => CrossVersion.binaryScalaVersion(Versions.scala212Version)
+  })
 )
 
 val root = (project in file("."))
@@ -76,4 +80,4 @@ val root = (project in file("."))
 
 // --- Custom commands
 addCommandAlias("lint", ";scalafmtCheck;test:scalafmtCheck;scalafmtSbtCheck;scalafixAll --check")
-addCommandAlias("fmt", ";scalafmtAll;scalafmtSbt")
+addCommandAlias("fmt", ";scalafmtAll;scalafmtSbt;scalafix RemoveUnused")
