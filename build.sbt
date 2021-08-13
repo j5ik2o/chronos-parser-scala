@@ -18,8 +18,8 @@ def crossScalacOptions(scalaVersion: String): Seq[String] =
 
 lazy val baseSettings = Seq(
   organization := "com.github.j5ik2o",
-  homepage := Some(url("https://github.com/j5ik2o/chronos-parser-scala")),
-  licenses := List("The MIT License" -> url("http://opensource.org/licenses/MIT")),
+  homepage     := Some(url("https://github.com/j5ik2o/chronos-parser-scala")),
+  licenses     := List("The MIT License" -> url("http://opensource.org/licenses/MIT")),
   developers := List(
     Developer(
       id = "j5ik2o",
@@ -45,8 +45,8 @@ lazy val baseSettings = Seq(
     Resolver.sonatypeRepo("releases"),
     "Seasar Repository" at "https://maven.seasar.org/maven2/"
   ),
-  Test / publishArtifact := false,
-  Test / fork := true,
+  Test / publishArtifact   := false,
+  Test / fork              := true,
   Test / parallelExecution := false,
   Compile / doc / sources := {
     val old = (Compile / doc / sources).value
