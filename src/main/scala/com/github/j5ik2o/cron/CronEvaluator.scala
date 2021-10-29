@@ -54,7 +54,7 @@ class CronEvaluator(instant: Instant, zoneId: ZoneId) extends ExprVisitor[Boolea
 
   case class ExpressionEvaluator(now: Int, max: Int) extends ExprVisitor[Boolean] {
 
-    //println("now = %d, max = %d".format(now, max))
+    // println("now = %d, max = %d".format(now, max))
     def visit(e: Expr): Boolean = e match {
       case AnyValueExpr()                => true
       case LastValueExpr() if now == max => true
