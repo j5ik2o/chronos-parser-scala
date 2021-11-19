@@ -70,7 +70,7 @@ val root = (project in file("."))
   .settings(
     name := "chronos-parser-scala",
     libraryDependencies ++= Seq(
-      "com.github.j5ik2o" %% "intervals-scala" % "1.0.19",
+      "com.github.j5ik2o" %% "intervals-scala" % "1.0.20",
       "org.scalatest"     %% "scalatest"       % "3.2.10" % Test
     ),
     libraryDependencies ++= Seq(
