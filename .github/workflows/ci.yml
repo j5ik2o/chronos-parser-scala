@@ -77,9 +77,10 @@ jobs:
           app_id: 111016
           private_key: ${{ secrets.BOT_PRIVATE_KEY }}
       - name: automerge
-        uses: pascalgn/automerge-action@v0.15.2
+        uses: pascalgn/automerge-action@v0.15.3
         env:
           GITHUB_TOKEN: "${{ steps.generate_token.outputs.token }}"
           MERGE_LABELS: ""
           MERGE_METHOD: "rebase"
           MERGE_FILTER_AUTHOR: "j5ik2o-bot[bot]"
+          MERGE_DELETE_BRANCH: "true"
