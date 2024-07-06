@@ -42,7 +42,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk: [ 8, 11, 14 ]
+        jdk: [ 8, 11, 17 ]
         scala: [ 2.13.14 ]
     runs-on: ubuntu-latest
     needs: lint
