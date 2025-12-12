@@ -4,21 +4,23 @@ import com.github.j5ik2o.cron.ast._
 import com.github.j5ik2o.intervals.Limit
 import org.scalatest.funsuite.AnyFunSuite
 
-import java.time.{ Duration, Instant, LocalDateTime, ZoneId, ZoneOffset }
+import java.time.{Duration, Instant, LocalDateTime, ZoneId, ZoneOffset}
 
 class CronEvaluatorSpec extends AnyFunSuite {
   val zoneId: ZoneId = ZoneId.systemDefault()
 
   ignore("example") {
     val cronExpression = "*/1 * * * *"
-    val expr           = CronParser.parse(cronExpression)
+    val expr = CronParser.parse(cronExpression)
 
     val start = Instant.now().plus(Duration.ofSeconds(3))
     val crondInstants: LazyList[Instant] =
       CronInstantInterval
-        .everFrom(Limit(start), CronInstantSpecification.of(expr, zoneId)).toLazyList.take(2)
+        .everFrom(Limit(start), CronInstantSpecification.of(expr, zoneId))
+        .toLazyList
+        .take(2)
 
-    def loop(crondInstants: LazyList[Instant]): Unit = {
+    def loop(crondInstants: LazyList[Instant]): Unit =
       crondInstants match {
         case l if l.isEmpty => ()
         case l @ h #:: t =>
@@ -33,7 +35,6 @@ class CronEvaluatorSpec extends AnyFunSuite {
             loop(l)
           }
       }
-    }
 
     loop(crondInstants)
 
@@ -47,7 +48,7 @@ class CronEvaluatorSpec extends AnyFunSuite {
       months = ValueExpr(1),
       dayOfWeeks = AnyValueExpr()
     )
-    val instant1  = LocalDateTime.of(2011, 1, 1, 1, 1).toInstant(ZoneOffset.ofHours(9))
+    val instant1 = LocalDateTime.of(2011, 1, 1, 1, 1).toInstant(ZoneOffset.ofHours(9))
     val evaluator = CronEvaluator(instant1, zoneId)
     assert(ast.accept(evaluator))
 
@@ -58,7 +59,7 @@ class CronEvaluatorSpec extends AnyFunSuite {
       months = ValueExpr(1),
       dayOfWeeks = AnyValueExpr()
     )
-    val instant2   = LocalDateTime.of(2011, 1, 1, 1, 1).toInstant(ZoneOffset.ofHours(9))
+    val instant2 = LocalDateTime.of(2011, 1, 1, 1, 1).toInstant(ZoneOffset.ofHours(9))
     val evaluator2 = CronEvaluator(instant2, zoneId)
     assert(!ast2.accept(evaluator2))
 

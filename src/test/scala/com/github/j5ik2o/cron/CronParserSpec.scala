@@ -70,7 +70,7 @@ class CronParserSpec extends AnyFunSuite {
       assert(value == ValueExpr(n), successIndex == 1)
     }
     for (n <- 1 to 31) {
-      val s                                   = "%02d".format(n)
+      val s = "%02d".format(n)
       val Parsed.Success(value, successIndex) = parse(s, CronParser.dayDigit(_))
       assert(value == ValueExpr(n), successIndex == 1)
     }
@@ -82,7 +82,7 @@ class CronParserSpec extends AnyFunSuite {
       assert(value == ValueExpr(n), successIndex == 1)
     }
     for (n <- 1 to 12) {
-      val s                                   = "%02d".format(n)
+      val s = "%02d".format(n)
       val Parsed.Success(value, successIndex) = parse(s, CronParser.monthDigit(_))
       assert(value == ValueExpr(n), successIndex == 1)
     }
@@ -94,7 +94,7 @@ class CronParserSpec extends AnyFunSuite {
       assert(value == ValueExpr(n), successIndex == 1)
     }
     for (n <- 0 to 23) {
-      val s                                   = "%02d".format(n)
+      val s = "%02d".format(n)
       val Parsed.Success(value, successIndex) = parse(s, CronParser.hourDigit(_))
       assert(value == ValueExpr(n), successIndex == 1)
     }
@@ -106,66 +106,70 @@ class CronParserSpec extends AnyFunSuite {
       assert(value == ValueExpr(n), successIndex == 1)
     }
     for (n <- 0 to 59) {
-      val s                                   = "%02d".format(n)
+      val s = "%02d".format(n)
       val Parsed.Success(value, successIndex) = parse(s, CronParser.minDigit(_))
       assert(value == ValueExpr(n), successIndex == 1)
     }
   }
 
   test("asterisk") {
-    val s                                   = "*"
+    val s = "*"
     val Parsed.Success(value, successIndex) = parse(s, CronParser.asterisk(_))
     assert(value == AnyValueExpr(), successIndex == 1)
   }
 
   test("per") {
-    def p[_: P]: P[Expr]                    = CronParser.per(CronParser.minDigit)
-    val s                                   = "/2"
+    def p[$ : P]: P[Expr] = CronParser.per(CronParser.minDigit)
+    val s = "/2"
     val Parsed.Success(value, successIndex) = parse(s, p(_))
     assert(value == ValueExpr(2), successIndex == 1)
   }
 
   test("asteriskPer") {
-    def p[_: P]: P[PerExpr]                 = CronParser.asteriskPer(CronParser.minDigit)
-    val s                                   = "*/2"
+    def p[$ : P]: P[PerExpr] = CronParser.asteriskPer(CronParser.minDigit)
+    val s = "*/2"
     val Parsed.Success(value, successIndex) = parse(s, p(_))
     assert(value == PerExpr(AnyValueExpr(), ValueExpr(2)), successIndex == 1)
   }
 
   test("rangePer") {
-    def p[_: P]: P[Expr]                      = CronParser.rangePer(CronParser.minDigit)
-    val s1                                    = "/2"
+    def p[$ : P]: P[Expr] = CronParser.rangePer(CronParser.minDigit)
+    val s1 = "/2"
     val Parsed.Success(value1, successIndex1) = parse(s1, p(_))
     assert(value1 == ValueExpr(2), successIndex1 == 1)
-    val s2                                    = "/"
+    val s2 = "/"
     val Parsed.Success(value2, successIndex2) = parse(s2, p(_))
     assert(value2 == NoOp(), successIndex2 == 1)
   }
 
   test("range") {
-    def p[_: P]: P[RangeExpr]               = CronParser.range(CronParser.minDigit)
-    val s                                   = "1-10/2"
+    def p[$ : P]: P[RangeExpr] = CronParser.range(CronParser.minDigit)
+    val s = "1-10/2"
     val Parsed.Success(value, successIndex) = parse(s, p(_))
     assert(value == RangeExpr(ValueExpr(1), ValueExpr(10), ValueExpr(2)), successIndex == 1)
   }
 
   test("list") {
-    def p[_: P]: P[Expr]                    = CronParser.list(CronParser.minDigit)
-    val s                                   = "1,2,3"
+    def p[$ : P]: P[Expr] = CronParser.list(CronParser.minDigit)
+    val s = "1,2,3"
     val Parsed.Success(value, successIndex) = parse(s, p(_))
     assert(value == ListExpr(List(ValueExpr(1), ValueExpr(2), ValueExpr(3))), successIndex == 1)
   }
 
   test("digitInstruction") {
-    def p[_: P]: P[Expr]                      = CronParser.digitInstruction(CronParser.minDigit)
-    val s1                                    = "1,2,5,9"
+    def p[$ : P]: P[Expr] = CronParser.digitInstruction(CronParser.minDigit)
+    val s1 = "1,2,5,9"
     val Parsed.Success(value1, successIndex1) = parse(s1, p(_))
-    assert(value1 == ListExpr(List(ValueExpr(1), ValueExpr(2), ValueExpr(5), ValueExpr(9))), successIndex1 == 1)
-    val s2                                    = "0-4,8-12"
+    assert(
+      value1 == ListExpr(List(ValueExpr(1), ValueExpr(2), ValueExpr(5), ValueExpr(9))),
+      successIndex1 == 1)
+    val s2 = "0-4,8-12"
     val Parsed.Success(value2, successIndex2) = parse(s2, p(_))
     assert(
       value2 == ListExpr(
-        List(RangeExpr(ValueExpr(0), ValueExpr(4), NoOp()), RangeExpr(ValueExpr(8), ValueExpr(12), NoOp()))
+        List(
+          RangeExpr(ValueExpr(0), ValueExpr(4), NoOp()),
+          RangeExpr(ValueExpr(8), ValueExpr(12), NoOp()))
       ),
       successIndex2 == 1
     )
@@ -173,7 +177,7 @@ class CronParserSpec extends AnyFunSuite {
 
   test("instruction") {
     {
-      val s                                   = "1 1 1 1 1"
+      val s = "1 1 1 1 1"
       val Parsed.Success(value, successIndex) = parse(s, CronParser.instruction(_))
       assert(
         value == CronExpr(
@@ -187,15 +191,20 @@ class CronParserSpec extends AnyFunSuite {
       )
     }
     {
-      val s                                   = "10 14 * * 1"
+      val s = "10 14 * * 1"
       val Parsed.Success(value, successIndex) = parse(s, CronParser.instruction(_))
       assert(
-        value == CronExpr(ValueExpr(10), ValueExpr(14), AnyValueExpr(), AnyValueExpr(), ValueExpr(1)),
+        value == CronExpr(
+          ValueExpr(10),
+          ValueExpr(14),
+          AnyValueExpr(),
+          AnyValueExpr(),
+          ValueExpr(1)),
         successIndex == 1
       )
     }
     {
-      val s                                   = "0 0 * * 1-5"
+      val s = "0 0 * * 1-5"
       val Parsed.Success(value, successIndex) = parse(s, CronParser.instruction(_))
       assert(
         value == CronExpr(
@@ -209,7 +218,7 @@ class CronParserSpec extends AnyFunSuite {
       )
     }
     {
-      val s                                   = "0 0 1,15 * *"
+      val s = "0 0 1,15 * *"
       val Parsed.Success(value, successIndex) = parse(s, CronParser.instruction(_))
       assert(
         value == CronExpr(
@@ -223,7 +232,7 @@ class CronParserSpec extends AnyFunSuite {
       )
     }
     {
-      val s                                   = "32 18 17,21,29 11 MON,WED"
+      val s = "32 18 17,21,29 11 MON,WED"
       val Parsed.Success(value, successIndex) = parse(s, CronParser.instruction(_))
       assert(
         value == CronExpr(

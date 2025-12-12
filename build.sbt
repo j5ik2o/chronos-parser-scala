@@ -5,21 +5,24 @@ def crossScalacOptions(scalaVersion: String): Seq[String] =
     case Some((3L, _)) =>
       Seq(
         "-source:3.0-migration",
-        "-Xignore-scala2-macros"
+        "-Xignore-scala2-macros",
+        "-Xtarget:17"
       )
     case Some((2L, scalaMajor)) if scalaMajor >= 12 =>
       Seq(
         "-Ydelambdafy:method",
-        "-target:jvm-1.8",
+        "-release",
+        "17",
         "-Yrangepos",
         "-Ywarn-unused"
       )
+    case _ => Seq.empty
   }
 
 lazy val baseSettings = Seq(
   organization := "com.github.j5ik2o",
-  homepage     := Some(url("https://github.com/j5ik2o/chronos-parser-scala")),
-  licenses     := List("The MIT License" -> url("http://opensource.org/licenses/MIT")),
+  homepage := Some(url("https://github.com/j5ik2o/chronos-parser-scala")),
+  licenses := List("The MIT License" -> url("http://opensource.org/licenses/MIT")),
   developers := List(
     Developer(
       id = "j5ik2o",
@@ -29,7 +32,7 @@ lazy val baseSettings = Seq(
     )
   ),
   scalaVersion := Versions.scala213Version,
-  // crossScalaVersions := Seq(Versions.scala213Version, Versions.scala3Version),
+  crossScalaVersions := Seq(Versions.scala213Version, Versions.scala3Version),
   scalacOptions ++= (
     Seq(
       "-unchecked",
@@ -40,13 +43,14 @@ lazy val baseSettings = Seq(
       "-language:_"
     ) ++ crossScalacOptions(scalaVersion.value)
   ),
+  javacOptions ++= Seq("--release", "17"),
   resolvers ++= Seq(
     Resolver.sonatypeRepo("snapshots"),
     Resolver.sonatypeRepo("releases"),
     "Seasar Repository" at "https://maven.seasar.org/maven2/"
   ),
-  Test / publishArtifact   := false,
-  Test / fork              := true,
+  Test / publishArtifact := false,
+  Test / fork := true,
   Test / parallelExecution := false,
   Compile / doc / sources := {
     val old = (Compile / doc / sources).value
@@ -57,11 +61,11 @@ lazy val baseSettings = Seq(
     }
   },
   semanticdbEnabled := true,
-  semanticdbVersion := scalafixSemanticdb.revision,
+  semanticdbVersion := "4.14.2",
   // Remove me when scalafix is stable and feature-complete on Scala 3
   ThisBuild / scalafixScalaBinaryVersion := (CrossVersion.partialVersion(scalaVersion.value) match {
     case Some((2, _)) => CrossVersion.binaryScalaVersion(scalaVersion.value)
-    case _            => CrossVersion.binaryScalaVersion(Versions.scala212Version)
+    case _ => CrossVersion.binaryScalaVersion(Versions.scala212Version)
   })
 )
 
@@ -71,11 +75,9 @@ val root = (project in file("."))
     name := "chronos-parser-scala",
     libraryDependencies ++= Seq(
       "com.github.j5ik2o" %% "intervals-scala" % "1.0.59",
-      "org.scalatest"     %% "scalatest"       % "3.2.19" % Test
-    ),
-    libraryDependencies ++= Seq(
+      "org.scalatest" %% "scalatest" % "3.2.19" % Test,
       "com.lihaoyi" %% "fastparse" % "3.1.1"
-    ).map(_.cross(CrossVersion.for3Use2_13))
+    )
   )
 
 // --- Custom commands
