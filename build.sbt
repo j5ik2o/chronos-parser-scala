@@ -5,15 +5,18 @@ def crossScalacOptions(scalaVersion: String): Seq[String] =
     case Some((3L, _)) =>
       Seq(
         "-source:3.0-migration",
-        "-Xignore-scala2-macros"
+        "-Xignore-scala2-macros",
+        "-Xtarget:17"
       )
     case Some((2L, scalaMajor)) if scalaMajor >= 12 =>
       Seq(
         "-Ydelambdafy:method",
-        "-target:jvm-1.8",
+        "-release",
+        "17",
         "-Yrangepos",
         "-Ywarn-unused"
       )
+    case _ => Seq.empty
   }
 
 lazy val baseSettings = Seq(
@@ -29,7 +32,7 @@ lazy val baseSettings = Seq(
     )
   ),
   scalaVersion := Versions.scala213Version,
-  // crossScalaVersions := Seq(Versions.scala213Version, Versions.scala3Version),
+  crossScalaVersions := Seq(Versions.scala213Version, Versions.scala3Version),
   scalacOptions ++= (
     Seq(
       "-unchecked",
@@ -40,6 +43,7 @@ lazy val baseSettings = Seq(
       "-language:_"
     ) ++ crossScalacOptions(scalaVersion.value)
   ),
+  javacOptions ++= Seq("--release", "17"),
   resolvers ++= Seq(
     Resolver.sonatypeRepo("snapshots"),
     Resolver.sonatypeRepo("releases"),
@@ -57,7 +61,7 @@ lazy val baseSettings = Seq(
     }
   },
   semanticdbEnabled := true,
-  semanticdbVersion := scalafixSemanticdb.revision,
+  semanticdbVersion := "4.14.2",
   // Remove me when scalafix is stable and feature-complete on Scala 3
   ThisBuild / scalafixScalaBinaryVersion := (CrossVersion.partialVersion(scalaVersion.value) match {
     case Some((2, _)) => CrossVersion.binaryScalaVersion(scalaVersion.value)
@@ -71,11 +75,9 @@ val root = (project in file("."))
     name := "chronos-parser-scala",
     libraryDependencies ++= Seq(
       "com.github.j5ik2o" %% "intervals-scala" % "1.0.59",
-      "org.scalatest"     %% "scalatest"       % "3.2.19" % Test
-    ),
-    libraryDependencies ++= Seq(
-      "com.lihaoyi" %% "fastparse" % "3.1.1"
-    ).map(_.cross(CrossVersion.for3Use2_13))
+      "org.scalatest"     %% "scalatest"       % "3.2.19" % Test,
+      "com.lihaoyi"       %% "fastparse"       % "3.1.1"
+    )
   )
 
 // --- Custom commands
