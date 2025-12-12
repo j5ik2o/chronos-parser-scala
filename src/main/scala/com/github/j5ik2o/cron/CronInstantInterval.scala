@@ -1,39 +1,39 @@
 package com.github.j5ik2o.cron
 
 import com.github.j5ik2o.cron.CronInstantInterval._
-import com.github.j5ik2o.intervals.{ Interval, IntervalLimit, Limit, LimitValue, Limitless }
+import com.github.j5ik2o.intervals.{Interval, IntervalLimit, Limit, LimitValue, Limitless}
 
 import java.time._
 
 object CronInstantInterval {
 
   def apply(
-      startValue: LimitValue[Instant],
-      endValue: LimitValue[Instant],
-      instantSpecification: CronInstantSpecification
+    startValue: LimitValue[Instant],
+    endValue: LimitValue[Instant],
+    instantSpecification: CronInstantSpecification
   ): CronInstantInterval =
     new CronInstantInterval(Interval.closed(startValue, endValue), instantSpecification)
 
   def everFrom(
-      startValue: LimitValue[Instant],
-      instantSpecification: CronInstantSpecification
+    startValue: LimitValue[Instant],
+    instantSpecification: CronInstantSpecification
   ): CronInstantInterval =
     inclusive(startValue, Limitless[Instant](), instantSpecification)
 
   def inclusive(
-      startValue: LimitValue[Instant],
-      endValue: LimitValue[Instant],
-      instantSpecification: CronInstantSpecification
+    startValue: LimitValue[Instant],
+    endValue: LimitValue[Instant],
+    instantSpecification: CronInstantSpecification
   ): CronInstantInterval =
     apply(startValue, endValue, instantSpecification)
 
   def inclusive(
-      startYear: Year,
-      startMonthDay: MonthDay,
-      endYear: Year,
-      endMonthDay: MonthDay,
-      instantSpecification: CronInstantSpecification,
-      zoneId: ZoneId
+    startYear: Year,
+    startMonthDay: MonthDay,
+    endYear: Year,
+    endMonthDay: MonthDay,
+    instantSpecification: CronInstantSpecification,
+    zoneId: ZoneId
   ): CronInstantInterval = {
     val startDate =
       ZonedDateTime.of(
@@ -53,12 +53,12 @@ object CronInstantInterval {
   final val NextInstantDuration: Duration = Duration.ofMinutes(1)
 
   private def createLazyList(
-      startValue: LimitValue[Instant],
-      endValue: LimitValue[Instant],
-      getNextStartValue: (LimitValue[Instant]) => LimitValue[Instant],
-      predicate: (Instant, LimitValue[Instant]) => Boolean,
-      instantSpecification: CronInstantSpecification
-  ): LazyList[Instant] = {
+    startValue: LimitValue[Instant],
+    endValue: LimitValue[Instant],
+    getNextStartValue: (LimitValue[Instant]) => LimitValue[Instant],
+    predicate: (Instant, LimitValue[Instant]) => Boolean,
+    instantSpecification: CronInstantSpecification
+  ): LazyList[Instant] =
     LazyList
       .cons(
         startValue.toValue,
@@ -69,20 +69,20 @@ object CronInstantInterval {
           predicate,
           instantSpecification
         )
-      ).filter(instantSpecification)
+      )
+      .filter(instantSpecification)
       .takeWhile { v =>
         endValue match {
           case _: Limitless[Instant] => true
-          case Limit(end)            => predicate(v, end)
+          case Limit(end) => predicate(v, end)
         }
       }
-  }
 
 }
 
 case class CronInstantInterval private (
-    underlying: Interval[Instant],
-    instantSpecification: CronInstantSpecification
+  underlying: Interval[Instant],
+  instantSpecification: CronInstantSpecification
 ) {
   val lowerIntervalLimit: IntervalLimit[Instant] = underlying.lowerLimitObject
   val upperIntervalLimit: IntervalLimit[Instant] = underlying.upperLimitObject
@@ -91,7 +91,7 @@ case class CronInstantInterval private (
   val upperLimit: LimitValue[Instant] = underlying.upperLimit
 
   val startValue: LimitValue[Instant] = lowerLimit
-  val endValue: LimitValue[Instant]   = upperLimit
+  val endValue: LimitValue[Instant] = upperLimit
 
   def complementRelativeTo(other: Interval[Instant]): Seq[Interval[Instant]] =
     underlying.complementRelativeTo(other)
@@ -129,17 +129,17 @@ case class CronInstantInterval private (
   def isSingleElement: Boolean = underlying.isSingleElement
 
   def newOfSameType(
-      lower: LimitValue[Instant],
-      lowerClosed: Boolean,
-      upper: LimitValue[Instant],
-      upperClosed: Boolean
+    lower: LimitValue[Instant],
+    lowerClosed: Boolean,
+    upper: LimitValue[Instant],
+    upperClosed: Boolean
   ): Interval[Instant] = underlying.newOfSameType(lower, lowerClosed, upper, upperClosed)
 
   def getInstantAfter(currentInstant: Instant, numberOfMinutes: Int): Option[Instant] = {
     require(numberOfMinutes >= 0)
 
-    val itr                     = iterator.filterNot(_.isBefore(currentInstant))
-    var count                   = 0
+    val itr = iterator.filterNot(_.isBefore(currentInstant))
+    var count = 0
     var result: Option[Instant] = None
     while (itr.hasNext && count < numberOfMinutes) {
       result = Some(itr.next())
@@ -148,7 +148,7 @@ case class CronInstantInterval private (
     result
   }
 
-  def toLazyList: LazyList[Instant] = {
+  def toLazyList: LazyList[Instant] =
     createLazyList(
       startValue,
       endValue,
@@ -156,11 +156,10 @@ case class CronInstantInterval private (
       (instant, endInstant) => !instant.isAfter(endInstant),
       instantSpecification
     )
-  }
 
   def toForwardLazyList: LazyList[Instant] = toLazyList
 
-  def toReverseLazyList: LazyList[Instant] = {
+  def toReverseLazyList: LazyList[Instant] =
     createLazyList(
       endValue,
       startValue,
@@ -168,7 +167,6 @@ case class CronInstantInterval private (
       (instant, endInstant) => !instant.isBefore(endInstant),
       instantSpecification
     )
-  }
 
   def iterator: Iterator[Instant] = toForwardLazyList.iterator
 

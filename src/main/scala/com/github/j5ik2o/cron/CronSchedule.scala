@@ -3,7 +3,7 @@ package com.github.j5ik2o.cron
 import com.github.j5ik2o.cron.ast.CronExpr
 import com.github.j5ik2o.intervals.Limit
 
-import java.time.{ Instant, ZoneId }
+import java.time.{Instant, ZoneId}
 
 class CronSchedule(cronExpression: String, zoneId: ZoneId) {
   val expr: CronExpr = CronParser.parse(cronExpression)
