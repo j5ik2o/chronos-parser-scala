@@ -17,9 +17,11 @@ jobs:
       with:
         ref: ${{ github.event.workflow_run.head_branch }}
         fetch-depth: 0
-    - uses: olafurpg/setup-scala@v14
+    - uses: actions/setup-java@v4
       with:
-        java-version: "adopt@1.8"
+        distribution: 'temurin'
+        java-version: '17'
+        cache: 'sbt'
     - uses: coursier/cache-action@v6
     - uses: olafurpg/setup-gpg@v3
     - run: sbt -v ci-release
