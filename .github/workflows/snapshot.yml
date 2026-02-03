@@ -22,7 +22,7 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
         cache: 'sbt'
-    - uses: coursier/cache-action@v7
+    - uses: coursier/cache-action@v8
     - uses: olafurpg/setup-gpg@v3
     - run: sbt -v ci-release
       env:
