@@ -75,7 +75,7 @@ val root = (project in file("."))
     name := "chronos-parser-scala",
     libraryDependencies ++= Seq(
       "com.github.j5ik2o" %% "intervals-scala" % "1.0.59",
-      "org.scalatest" %% "scalatest" % "3.2.19" % Test,
+      "org.scalatest" %% "scalatest" % "3.2.20" % Test,
       "com.lihaoyi" %% "fastparse" % "3.1.1"
     )
   )
