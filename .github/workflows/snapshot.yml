@@ -37,6 +37,11 @@ jobs:
         EOF
     - name: Import GPG key
       run: |
+        mkdir -p ~/.gnupg
+        echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+        echo "use-agent" >> ~/.gnupg/gpg.conf
+        echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+        gpgconf --reload gpg-agent || true
         echo "${{ secrets.PGP_SECRET }}" | base64 -d | gpg --batch --import
     - name: Publish Snapshot
       run: |
