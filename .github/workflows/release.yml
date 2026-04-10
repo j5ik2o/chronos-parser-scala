@@ -9,6 +9,8 @@ jobs:
     env:
       JAVA_OPTS: -Xms2048M -Xmx2048M -Xss6M -XX:ReservedCodeCacheSize=256M -Dfile.encoding=UTF-8
       JVM_OPTS:  -Xms2048M -Xmx2048M -Xss6M -XX:ReservedCodeCacheSize=256M -Dfile.encoding=UTF-8
+      SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+      SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
     steps:
     - uses: actions/checkout@v6
       with:
@@ -19,10 +21,16 @@ jobs:
         java-version: '17'
         cache: 'sbt'
     - uses: sbt/setup-sbt@v1
-    - uses: olafurpg/setup-gpg@v3
+    - name: Configure Sonatype credentials
+      run: |
+        mkdir -p ~/.sbt/1.0
+        cat > ~/.sbt/1.0/sonatype_credentials <<EOF
+        realm=Sonatype Nexus Repository Manager
+        host=central.sonatype.com
+        user=$SONATYPE_USERNAME
+        password=$SONATYPE_PASSWORD
+        EOF
     - run: sbt -v ci-release
       env:
         PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
         PGP_SECRET: ${{ secrets.PGP_SECRET }}
-        SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-        SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
