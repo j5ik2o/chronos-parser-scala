@@ -30,6 +30,13 @@ jobs:
         user=$SONATYPE_USERNAME
         password=$SONATYPE_PASSWORD
         EOF
+    - name: Configure GPG agent for loopback pinentry
+      run: |
+        mkdir -p ~/.gnupg
+        echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+        echo "use-agent" >> ~/.gnupg/gpg.conf
+        echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+        gpgconf --reload gpg-agent || true
     - run: sbt -v ci-release
       env:
         PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
