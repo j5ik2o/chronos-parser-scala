@@ -1,5 +1,7 @@
 import Dependencies.Versions
 
+ThisBuild / credentials += Credentials(Path.userHome / ".sbt" / "1.0" / "sonatype_credentials")
+
 def crossScalacOptions(scalaVersion: String): Seq[String] =
   CrossVersion.partialVersion(scalaVersion) match {
     case Some((3L, _)) =>
@@ -44,10 +46,10 @@ lazy val baseSettings = Seq(
     ) ++ crossScalacOptions(scalaVersion.value)
   ),
   javacOptions ++= Seq("--release", "17"),
-  resolvers ++=
-    Resolver.sonatypeOssRepos("snapshots") ++
-      Resolver.sonatypeOssRepos("releases") ++
-      Seq("Seasar Repository" at "https://maven.seasar.org/maven2/"),
+  resolvers ++= Seq(
+    Resolver.sonatypeCentralSnapshots,
+    "Seasar Repository" at "https://maven.seasar.org/maven2/"
+  ),
   Test / publishArtifact := false,
   Test / fork := true,
   Test / parallelExecution := false,
