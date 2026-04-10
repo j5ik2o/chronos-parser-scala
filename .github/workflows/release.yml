@@ -24,12 +24,8 @@ jobs:
     - name: Configure Sonatype credentials
       run: |
         mkdir -p ~/.sbt/1.0
-        cat > ~/.sbt/1.0/sonatype_credentials <<EOF
-        realm=Sonatype Nexus Repository Manager
-        host=central.sonatype.com
-        user=$SONATYPE_USERNAME
-        password=$SONATYPE_PASSWORD
-        EOF
+        printf 'realm=Sonatype Nexus Repository Manager\nhost=central.sonatype.com\nuser=%s\npassword=%s\n' \
+          "$SONATYPE_USERNAME" "$SONATYPE_PASSWORD" > ~/.sbt/1.0/sonatype_credentials
     - name: Configure GPG agent for loopback pinentry
       run: |
         mkdir -p ~/.gnupg
